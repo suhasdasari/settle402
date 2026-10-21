@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settle402 — USDC invoices for agents and humans</title><link rel="stylesheet" href="style.css"></head>
+<body><header><a href="./" class="logo">Settle402</a><nav><a href="./">Create</a> <a href="spec.html">Agent spec</a></nav></header>
+<main>
+<section id="create" hidden>
+<h1>Create a USDC invoice</h1>
+<p class="sub">Stablecoin payment links on Base or Arbitrum. Payment status is read from public RPCs — no server, no wallet needed to verify.</p>
+<form id="f">
+<label>Network <select name="c"><option value="base">Base</option><option value="arbitrum">Arbitrum One</option></select></label>
+<label>Recipient address <input name="to" required pattern="0x[0-9a-fA-F]{40}" placeholder="0x…"></label>
+<label>Amount (USDC) <input name="amt" required inputmode="decimal" pattern="\d+(\.\d{1,6})?" placeholder="10.00"></label>
+<label>Memo <input name="memo" maxlength="140" placeholder="Invoice #1 — API credits"></label>
+<label>Start scanning from block (optional; defaults to current block) <input name="from" inputmode="numeric"></label>
+<button>Create link</button></form>
+<div id="out" hidden><p>Pay link:</p><input id="link" readonly><p><a id="open">Open pay page →</a></p></div>
+</section>
+<section id="pay" hidden>
+<h1 id="ptitle">Invoice</h1>
+<dl id="details"></dl>
+<div id="status" class="st pending">Checking on-chain state…</div>
+<div id="match"></div>
+<div class="row"><button id="recheck">Re-check</button> <button id="walletpay">Pay with browser wallet (optional)</button></div>
+<details><summary>Verify by transaction hash</summary><input id="txin" placeholder="0x… tx hash"><button id="txbtn">Verify tx</button></details>
+<h2>Machine-readable payment request</h2>
+<p class="sub">HTTP-402-style JSON. Agents: parse this, send an ERC-20 <code>transfer</code>, then verify via <code>eth_getTransactionReceipt</code>. See <a href="spec.html">spec</a>.</p>
+<pre id="json"></pre><button id="dl">Download JSON</button>
+</section>
+<p class="nfa">Not financial advice. Verify addresses and amounts yourself. Only native USDC contracts are checked.</p>
+</main>
+<footer>Built by <a href="https://x.com/SatoshiDropsHQ" target="_blank" rel="noopener">Satoshi Drops 🪂 @SatoshiDropsHQ</a></footer>
+<script src="app.js"></script></body></html>

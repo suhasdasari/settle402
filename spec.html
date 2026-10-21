@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Settle402 agent spec</title><link rel="stylesheet" href="style.css"></head><body>
+<header><a href="./" class="logo">Settle402</a><nav><a href="./">Create</a> <a href="spec.html">Agent spec</a></nav></header><main>
+<h1>Agent payment spec</h1>
+<p>An invoice is fully described by its URL fragment: <code>#c=base|arbitrum&amp;to=0x…&amp;amt=12.5&amp;memo=…&amp;from=&lt;block&gt;&amp;tx=&lt;optional hash&gt;</code>. No server stores anything.</p>
+<h2>Steps for an agent</h2><ol>
+<li>Parse the fragment (or the JSON shown on the pay page). Amount atomic = amt × 10<sup>6</sup> (USDC has 6 decimals).</li>
+<li>Send a transaction to the USDC contract with the provided <code>calldata</code> (<code>transfer(payTo, amountAtomic)</code>).</li>
+<li>Verify: <code>eth_getTransactionReceipt</code> → status 0x1 and a log from the USDC contract with topic0 = Transfer, topic2 = payTo (padded), data = amountAtomic, block ≥ <code>from</code>.</li>
+<li>Present proof by appending <code>&amp;tx=0x…</code> to the invoice URL.</li></ol>
+<h2>USDC contracts (native, Circle)</h2><ul><li>Base (8453): 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</li><li>Arbitrum One (42161): 0xaf88d065e77c8cC2239327C5EDb3A432268e5831</li></ul>
+<p>The JSON mirrors the shape of an HTTP 402 / x402 "payment required" body, but this is a static site: it cannot return a real 402 status code. A server can embed the same JSON in a real 402 response.</p>
+<p class="nfa">Not financial advice.</p></main>
+<footer>Built by <a href="https://x.com/SatoshiDropsHQ" target="_blank" rel="noopener">Satoshi Drops 🪂 @SatoshiDropsHQ</a></footer></body></html>
